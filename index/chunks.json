@@ -1,0 +1,62 @@
+[
+  {
+    "text": "About Eluvio Eluvio (https://eluv.io) is solving the generational problems of video over the Internet with its Content Fabric Protocol, a next-generation content distribution and storage protocol transforming the distribution and monetization of premium video and digital media–in contrast to legacy cloud workflows and CDNs. Recognized as NAB Streaming Product of the Year in 2024 and 2025, Eluvio customers are innovative sports and entertainment brands such as Amazon Studios/MGM, Cricket Australia, European Professional Club Rugby, Red Bull, SONY, Telstra Broadcast Services, UEFA, United Rugby Championship, Warner Bros., WPALiveTV, WWE, and others. Eluvio is led by Michelle Munson and Serban Simu, founders and inventors of Aspera. Based in Berkeley, California with a worldwide team of 40 engineers, scientists and commercial leaders, Eluvio has won the Seicon Grand prize, and the prestigious Engineering Excellence Award by the Hollywood Professional Association and holds 15 issued US patents. On X: @EluvioInc; On LinkedIn: Eluvio https://www.linkedin.com/company/eluv-io/. Eluvio Media Contact: PR@Eluv.io",
+    "title": "About Eluvio",
+    "url": "https://live-stg-eluv-io.web.app/about/news/eluvio-wins-futures-best-of-show-award",
+    "chunk_id": 0
+  },
+  {
+    "text": "Additional capabilities in the latest Bangkok release include: AI-driven video intelligence via the Eluvio Video Intelligence Editor (EVIE) to provide first-ever fully automatic live sports highlights generation using novel agentic AI pipeline with zero-copies/retranscodings/exports, personalization, and generation during live events. Advanced D2C and B2B streaming features such as unlimited multiview, enhanced no-code TV and browser apps, versatile sales models, built-in entitlements, and dynamic ad insertion. Proven scalability, already powering 500+ live events for leading sports and entertainment brands worldwide. For more details, visit: https://eluv.io.",
+    "title": "Additional Capability",
+    "url": "https://live-stg-eluv-io.web.app/about/news/eluvio-wins-futures-best-of-show-award",
+    "chunk_id": 1
+  },
+  {
+    "text": "News September 15th, 2025 Eluvio Wins Future’s Best of Show Award, Presented by TV Tech at IBC 2025 for Latest Content Fabric Release New live broadcast distribution replaces satellite and fiber with IP delivery at sub-second latency and built-in security AI video intelligence now generates automated live sports highlights with zero copies or exports OTT streaming stack enables low-latency global streaming with multiview, DVR, rights management, and no-code apps AMSTERDAM – September 15, 2025 – Eluvio today announced that its latest Content Fabric and Application Suite – Bangkok Release is the recipient of Future’s Best of Show Award, presented at IBC 2025 by TV Tech. “We are honored to receive TV Tech’s Best of Show Award at IBC 2025,” said Michelle Munson, CEO and co-founder of Eluvio. “This recognition underscores how the Content Fabric is redefining video distribution—replacing costly satellite and point-to-point systems with sub-second, secure global delivery, while adding powerful AI-native features and advanced streaming capabilities. It’s a transformational step toward eliminating decades-old barriers and unlocking new possibilities for content owners worldwide.” The new release provides an ultra-efficient capability intended to displace legacy satellite and point-to-point fiber for live global broadcast feed distribution over IP (SMPTE 2110/2022 JPEG-XS) and MPEG-TS (UDP, RTP, SRT) and dynamically distributes all program streams–audio, video, and ancillary data–as Content Object “parts”, and generates SRT/RTP/TS outputs to global takers on demand. Average global latencies are under 500 milliseconds independent of ingest and egress location. Built on the Content Fabric’s novel zero-copy routing and distribution protocol, the transport is multi-path, fully reliable, and scales, bringing breakthrough cost efficiency and simplicity. Live feed “parts” persist, providing unlimited recording, replay, and archive without file copies or redistribution.",
+    "title": "news wins future award",
+    "url": "https://live-stg-eluv-io.web.app/about/news/eluvio-wins-futures-best-of-show-award",
+    "chunk_id": 2
+  },
+  {
+    "text": "A Comprehensive Overview of the Blockchain Protocol The Fabric is a blockchain controlled, realtime, and programmable content storage and distribution network in which nodes execute a novel content-native blockchain protocol called the Content Fabric Protocol (CFP). The CFP is designed to enable a fully decentralized Creator Economy with high quality, highly efficient and verifiable digital content ownership, distribution, and monetization. It provides the essential functions for managing and distributing digital content over the Internet in a blockchain network to power Web3-native content experiences at unlimited scale. The design goals are low latency, high resolution publishing, hosting, streaming, download, and interactive access to digital content globally with maximum efficiency and lowest cost, on chain content provenance, ownership and rights protection without middle parties, on chain content access control; and scalable person-to-person transactions. The following sections describe the key facets of the protocol. For a deep dive, please refer to the complete protocol white paper.",
+    "title": "Blockchain Protocol",
+    "url": "https://eluv.io/content-fabric/blockchain",
+    "chunk_id": 3
+  },
+  {
+    "text": "Eluvio's blockchain-based approach provides several advantages over traditional CDN architectures. The decentralized nature of the fabric eliminates single points of failure and reduces bandwidth costs. Smart contracts enable automated rights management and content monetization. The system scales efficiently to handle millions of concurrent viewers.",
+    "title": "Technical Advantages",
+    "url": "https://eluv.io/technology",
+    "chunk_id": 4
+  },
+  {
+    "text": "The Eluvio platform supports multiple use cases including live streaming, video on demand, NFTs and digital collectibles, and premium content distribution. Media companies use Eluvio to launch direct-to-consumer streaming services. Artists and creators use the platform to distribute exclusive content and limited edition digital items to their fans.",
+    "title": "Use Cases",
+    "url": "https://eluv.io/use-cases",
+    "chunk_id": 5
+  },
+  {
+    "text": "Security is a core feature of the Eluvio Content Fabric. All content is encrypted at rest and in transit. The platform provides built-in DRM support including Widevine, FairPlay, and PlayReady. Access control is managed through blockchain-based smart contracts, ensuring only authorized users can access premium content.",
+    "title": "Security Features",
+    "url": "https://eluv.io/security",
+    "chunk_id": 6
+  },
+  {
+    "text": "Eluvio enables content owners to manage their entire workflow in one place. The platform handles video ingest, transcoding to multiple formats and bitrates, storage, rights management, and delivery. This integrated approach eliminates the need for multiple vendors and complex integrations. Content can be published globally in minutes instead of hours.",
+    "title": "Workflow Management",
+    "url": "https://eluv.io/features",
+    "chunk_id": 7
+  },
+  {
+    "text": "The Eluvio Content Fabric uses a novel consensus mechanism optimized for content distribution. Unlike proof-of-work blockchains, the fabric is energy efficient and can process thousands of transactions per second. Nodes in the network are incentivized to store and deliver content, creating a self-sustaining ecosystem.",
+    "title": "Blockchain Architecture",
+    "url": "https://eluv.io/technology",
+    "chunk_id": 8
+  },
+  {
+    "text": "Eluvio partners with major media companies, studios, and technology providers. The platform integrates with existing media workflows and supports industry-standard formats and protocols. Partnerships enable Eluvio to deliver content globally while maintaining high quality and low latency.",
+    "title": "Partnerships",
+    "url": "https://eluv.io/partners",
+    "chunk_id": 9
+  }
+]
