@@ -23,7 +23,18 @@ curl -X POST "http://localhost:5000/ask" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"What does Eluvio do?"}'
 
+Eluvio-RAG
 
+Retrieval-Augmented Generation (RAG) system for answering questions about Eluvio — a blockchain-controlled content fabric platform.
+
+Workflow & Procedure
+1) Download Ollama and model
+ollama pull llama3.2:3b
+
+2) Set up virtual environment and dependencies
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
 
 
