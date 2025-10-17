@@ -9,14 +9,15 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers import CrossEncoder
 import ollama
 import os
+from collections import defaultdict
 
 app = Flask(__name__)
 
 class RAGAgent:
     def __init__(self, index_dir='index'):
         """Initialize RAG agent"""
+        
         print("Loading RAG agent...")
-       
         with open(os.path.join(index_dir, 'config.json'), 'r') as f:
             config = json.load(f)
         
@@ -30,11 +31,23 @@ class RAGAgent:
         
         # Load embeddings
         self.embeddings = np.load(os.path.join(index_dir, 'embeddings.npy'))
-        
         print(f"Loaded {len(self.chunks)} chunks")
         
         # LLM settings
         self.llm_model = "llama3.2:3b"
+
+        # Build URL to chunks mapping for lookup
+        self.url_to_chunks = defaultdict(list)
+        for i, chunk in enumerate(self.chunks):
+            self.url_to_chunks[chunk['url']].append({
+                'index': i,
+                'chunk': chunk
+            })
+        # Sort chunks by chunk_id within each URL for neighbor retrieval
+        for url in self.url_to_chunks:
+            self.url_to_chunks[url].sort(key=lambda x: x['chunk']['chunk_id'])
+
+        self.neighbor_window = 1
         
     def retrieve(self, query, top_k=5):
         """Retrieve most relevant chunks for query"""
@@ -52,12 +65,56 @@ class RAGAgent:
         # Return top chunks with scores
         results = []
         for idx in top_indices:
-            results.append({
+            results.append({  
+                'index': int(idx),
                 'chunk': self.chunks[idx],
                 'score': float(similarities[idx])
             })
         
         return results
+    
+    def expand_with_neighbors(self, retrieved_chunks, window=1):
+        """
+        Expand context by including neighboring chunks
+        
+        Args:
+            retrieved_chunks: List of retrieved chunk results
+            window: Number of chunks to include before and after, default set to 1
+        """
+        expanded = []
+        seen_indices = set()
+        
+        for result in retrieved_chunks:
+            chunk_idx = result['index']
+            url = result['chunk']['url']
+            
+            # Get all chunks from the same URL
+            url_chunks = self.url_to_chunks[url]
+            
+            # Find position in URL's chunk list
+            pos = next((i for i, item in enumerate(url_chunks) 
+                       if item['index'] == chunk_idx), None)
+            
+            if pos is None:
+                continue
+            
+            # Include neighbors
+            start = max(0, pos - window)
+            end = min(len(url_chunks), pos + window + 1)
+            
+            for i in range(start, end):
+                idx = url_chunks[i]['index']
+                if idx not in seen_indices:
+                    expanded.append({
+                        'chunk': self.chunks[idx],
+                        'score': result['score'] if idx == chunk_idx else result['score'] * 0.8,
+                        'index': idx,
+                        'relation': 'original' if idx == chunk_idx else 'neighbor'
+                    })
+                    print(f"new chunk{idx} included into the context")
+                    seen_indices.add(idx)
+        
+        return expanded
     
     def generate_response(self, query, retrieved_chunks):
         """Generate response using LLM with retrieved context"""
@@ -101,7 +158,7 @@ Answer:"""
                     'temperature': 0.2,         # temperature:  fact-based to more nutural/divergent
                     'top_p': 0.9,
                     'top_k': 40,
-                    'num_predict': 200          # length of words
+                    'num_predict': 250          # length of words
                 }
             )
             return response['response'].strip()
@@ -130,13 +187,16 @@ Answer:"""
             print(f"[DEBUG] chunk {r['chunk']['chunk_id']} - {r['chunk']['title']} (score={r['score']:.3f})")
         
         # minimum similarity threshold : change from 0.3 to 0.1
-        MIN_SIMILARITY = 0.1
+        MIN_SIMILARITY = 0.3
         retrieved = [r for r in retrieved if r['score'] > MIN_SIMILARITY]
         
         if not retrieved:
-            return "I don't have enough information to answer that question."
+            return "Sorry, I don't have enough information to answer that question."
         
-        response = self.generate_response(query, retrieved)
+        expanded = self.expand_with_neighbors(retrieved, window=self.neighbor_window)
+        print(f"Retrieved: {len(retrieved)} chunks, Expanded to: {len(expanded)} chunks")
+        
+        response = self.generate_response(query, expanded)
         return response
     
     def rerank_results(self, query, retrieved_chunks, top_k=5):
@@ -167,12 +227,15 @@ def ask():
             return jsonify({'error': 'Missing prompt field'}), 400
         
         query = data['prompt']
+        if not query:
+            return jsonify({'error': 'Prompt cannot be empty'}), 400
+        
         response = agent.ask(query)
         
         return jsonify({'response': response})
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error during asking': str(e)}), 500
 
 @app.route('/health', methods=['GET'])
 def health():

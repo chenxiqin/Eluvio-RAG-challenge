@@ -1,4 +1,6 @@
 # Web Scraping
+selenium==4.15.2
+webdriver-manager==4.0.1
 requests==2.31.0
 beautifulsoup4==4.12.3
 lxml==5.1.0
@@ -18,3 +20,6 @@ flask-cors==4.0.0
 # Utilities
 python-dotenv==1.0.0
 tqdm==4.66.1
+
+colorama
+

@@ -1,0 +1,60 @@
+{
+  "test_time": "2025-10-17 04:03:26",
+  "total_tests": 9,
+  "results": [
+    {
+      "question": "What is Eluvio's main business?",
+      "answer": "Eluvio's main business is providing a next-generation platform for storing, delivering, and monetizing digital content. Specifically, it offers a Content Fabric Protocol that transforms the distribution and monetization of premium video and digital media by solving the generational problems of video over the Internet.",
+      "quality": "good",
+      "time": 27.00758719444275
+    },
+    {
+      "question": "What is the Eluvio Content Fabric?",
+      "answer": "The Eluvio Content Fabric is a blockchain-controlled, decentralized system designed to manage and distribute content through a unified architecture, utilizing a built-in commerce and access control framework. It provides functions conventionally provided by separate services and software stacks, including content storage and retrieval, data storage and query APIs, and more.",
+      "quality": "good",
+      "time": 18.98514676094055
+    },
+    {
+      "question": "How does Eluvio use blockchain?",
+      "answer": "Eluvio utilizes blockchain technology in its Content Fabric platform to provide a decentralized, global media distribution system. The blockchain smart contracts control video content delivery, ensuring low latency, high-quality (4K) content distribution, and just-in-time streaming. This approach eliminates the need for traditional cloud media stacks or CDNs, reducing environmental impact.\n\nKey benefits of using blockchain in Eluvio's Content Fabric include:\n\n1. **Decentralized and transparent**: The platform is built on a decentralized architecture, allowing for transparent and tamper-proof content distribution.\n2. **Low latency and high quality**: Blockchain smart contracts enable fast and efficient content delivery, ensuring low latency and high-quality (4K) video streaming.\n3. **Environmental benefits**: By avoiding file copies and using just-in-time protocols, Eluvio's Content Fabric reduces its environmental impact compared to traditional media distribution methods.\n\nOverall, Eluvio's use of blockchain technology in the Content Fabric platform provides a scalable, secure, and sustainable solution for managing and distributing digital content.",
+      "quality": "good",
+      "time": 35.12854719161987
+    },
+    {
+      "question": "What security features does Eluvio provide?",
+      "answer": "Based on the provided context, Eluvio provides several security features, including:\n\n1. Decentralized media blockchain: The Eluvio Content Fabric is built on a decentralized blockchain technology, which ensures that video content is stored and distributed securely across a global network of nodes.\n2. Blockchain smart contracts: Under the control of blockchain smart contracts, video content is dynamically served from the source, ensuring that it remains authentic and tamper-proof.\n3. Forensic watermarking: Eluvio's forensic watermarking feature allows for the detection of unauthorized use or distribution of copyrighted content.\n4. Instant Live-to-VOD (DVR) with no file copies: This feature ensures that video content is streamed in real-time, without creating temporary copies of the files, reducing the risk of data breaches.\n\nThese security features work together to provide a secure and reliable platform for storing, distributing, and monetizing digital content.",
+      "quality": "partial",
+      "time": 34.10254693031311
+    },
+    {
+      "question": "When was Eluvio founded?",
+      "answer": "Eluvio was founded by Michelle Munson and Serban Simu, who are also the founders and inventors of Aspera (an Emmy Award-winning company acquired by IBM in 2014).",
+      "quality": "good",
+      "time": 24.46647882461548
+    },
+    {
+      "question": "What are Eluvio's use cases?",
+      "answer": "Eluvio's use cases include powering streaming platforms for sports teams, leagues, brands, and content owners, as well as providing transformational streaming, monetization, and authenticity of any digital media content at scale. Additionally, Eluvio's Content Fabric has been used in various industries such as sports (e.g., European Professional Club Rugby), entertainment (e.g., Sony Pictures), and broadcasting (e.g., Telstra Broadcast Services/UEFA) to unlock new revenue opportunities, brand loyalty, and engagement.",
+      "quality": "partial",
+      "time": 29.130592107772827
+    },
+    {
+      "question": "Who invented the internet?",
+      "answer": "Sorry, I don't have enough information to answer that question.",
+      "quality": "good",
+      "time": 1.22928786277771
+    },
+    {
+      "question": "Where is ELuvio at",
+      "answer": "ELuvio is based in Berkeley, California.",
+      "quality": "good",
+      "time": 16.979173183441162
+    },
+    {
+      "question": "Which industries or partners use Eluvio?",
+      "answer": "Eluvio partners with various industries and companies across multiple sectors, including:\n\n* Sports teams, leagues, brands, and content owners\n* Entertainment companies such as Amazon Studios/MGM, FOX, SONY Pictures, and Warner Bros.\n* Music artists like Black Eyed Peas and Dolly Parton\n* Telecommunications providers like Telstra Broadcast Services and UEFA\n* Broadcasting companies like Cricket Australia and European Professional Club Rugby\n* WWE and other notable brands\n\nThese partners leverage Eluvio's Content Fabric to transform their streaming, monetization, and AI discovery capabilities for digital media content at scale.",
+      "quality": "partial",
+      "time": 19.754931926727295
+    }
+  ]
+}
