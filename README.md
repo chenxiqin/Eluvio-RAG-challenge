@@ -1,6 +1,6 @@
-## Eluvio-RAG
+# Eluvio-RAG
 
-# Reproduce Workflow & Procedure
+## Reproduce Workflow & Procedure
 
 1) Download Ollama and model
 ollama pull llama3.2:3b
@@ -21,7 +21,7 @@ curl -X POST "http://localhost:5000/ask" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"What does Eluvio do?"}'
 
-# Potential Optimization
+## Potential Optimization
 
 1) Multi-topic Question Handling
 
@@ -109,24 +109,59 @@ Essay-like prompt
 
 ## Test question Answer Result:
 What is Eluvio's main business?
+
 {
+
 "question": "What is Eluvio's main business?",
-"answer": "Eluvio's main business is providing a next-generation platform for storing, delivering, and monetizing digital content. Specifically, it offers a Content Fabric Protocol that transforms the distribution and monetization of premium video and digital media by solving the generational problems of video over the Internet.",
+
+"answer": "Eluvio's main business is providing a next-generation platform for storing, delivering, and monetizing digital content. 
+
+Specifically, it offers a Content Fabric Protocol that transforms the distribution and monetization of premium video and digital media by 
+
+solving the generational problems of video over the Internet.",
+
 "time": 22.119462728500366
 }
 
 What is the Eluvio Content Fabric?
+
 {
+
 "question": "What is the Eluvio Content Fabric?",
-"answer": "The Eluvio Content Fabric is a blockchain-controlled, decentralized system designed to manage and distribute content through a unified architecture, utilizing a built-in commerce and access control framework. It provides functions conventionally provided by separate services and software stacks, including content storage and retrieval, data storage and query APIs, and more.",
+
+"answer": "The Eluvio Content Fabric is a blockchain-controlled, decentralized system designed to manage and distribute content through a 
+
+unified architecture, utilizing a built-in commerce and access control framework. It provides functions conventionally provided by separate 
+
+services and software stacks, including content storage and retrieval, data storage and query APIs, and more.",
+
 "time": 18.269644021987915
 }
 
+
 How does Eluvio use blockchain?
+
 {
+
 "question": "How does Eluvio use blockchain?",
-"answer": "Eluvio utilizes blockchain technology in its Content Fabric platform to provide a decentralized, global network for Internet video distribution, monetization, and content management. The blockchain design enables low latency, high-quality (4K) content distribution, as well as just-in-time streaming, without the need for file copies.\n\nUnder the control of blockchain smart contracts, video content is dynamically served from the source, ensuring authenticity and integrity. This approach also facilitates on-chain monetization, cross-chain authorization, and on-chain payments, providing a secure and transparent way to manage digital media content at scale.\n Key benefits of Eluvio's use of blockchain include:\n Low latency and high-quality content distribution\n Just-in-time streaming without file copies\n On-chain monetization and authorization\n Secure and transparent content management\n Overall, Eluvio's integration of blockchain technology enables the creation of a decentralized, global platform for Internet video distribution, providing transformational benefits for sports teams, leagues, brands, and content owners.",
+
+"answer": "Eluvio utilizes blockchain technology in its Content Fabric platform to provide a decentralized, global network for Internet 
+
+video distribution, monetization, and content management. The blockchain design enables low latency, high-quality (4K) content 
+
+distribution, as well as just-in-time streaming, without the need for file copies.\n\nUnder the control of blockchain smart contracts, 
+
+video content is dynamically served from the source, ensuring authenticity and integrity. This approach also facilitates on-chain 
+
+monetization, cross-chain authorization, and on-chain payments, providing a secure and transparent way to manage digital media content at 
+
+scale.\n Key benefits of Eluvio's use of blockchain include:\n Low latency and high-quality content distribution\n Just-in-time streaming 
+without file copies\n On-chain monetization and authorization\n Secure and transparent content management\n Overall, Eluvio's integration 
+of blockchain technology enables the creation of a decentralized, global platform for Internet video distribution, providing 
+transformational benefits for sports teams, leagues, brands, and content owners.",
+
 "time": 28.892870903015137
+
 }
 
 What security features does Eluvio provide?
