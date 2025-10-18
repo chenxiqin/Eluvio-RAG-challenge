@@ -5,7 +5,7 @@ A lightweight RAG system that answers questions about Eluv.io by scraping their 
 ## 🚀Quick Start
 ### Prerequisites
 
-1. Install Ollama and download the model:
+1. Install Ollama and download the model:/
 `ollama pull llama3.2:3b`
 
 2. Set up Python environment:
