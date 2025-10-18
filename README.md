@@ -1,159 +1,134 @@
-# Eluvio-RAG
+# Eluvio-RAG Agent
 
-## Reproduce Workflow & Procedure
+A lightweight RAG system that answers questions about Eluv.io by scraping their public website, indexing the content locally, storing embeddings in a vector database and serving responses through a Flask API.
 
-1) Download Ollama and model
-ollama pull llama3.2:3b
+## 🚀Quick Start
+### Prerequisites
 
-2) Set up virtual environment and dependencies
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+1. Install Ollama and download the model:
+`ollama pull llama3.2:3b`
 
-3) Generate embeddings from scraped data
-python generate_sample_embeddings.py
+2. Set up Python environment:
+`python3 -m venv venv
+source venv/bin/activate 
+`
+3. Install all dependencies with:
+`bashpip install -r requirements.txt`
 
-4) Start the server
+
+### Running the Agent
+`# 1. Build the search index from scraped data
+python index.py
+
+# 2. Start the server
 python server.py
 
-5) Interact with the API (sample)
+# 3. Ask questions via the API
 curl -X POST "http://localhost:5000/ask" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt":"What does Eluvio do?"}'
+     -H "Content-Type: application/json" \
+     -d '{"prompt":"What does Eluvio do?"}'
+`
 
-## Potential Optimization
-
-1) Multi-topic Question Handling
-
-2) Cross-Encoder Reranker✅
-Added a CrossEncoder model to rerank retrieved chunks.
-
-3) Prompt Refinement✅
-
-4) Neighbor-based Context Expansion✅
-Extend the context by including neighboring chunks before and after the selected chunk—only within the same webpage. By doing this, I hope to maximize both the relatability and comprehensiveness of the context. 
-Another way to do context expansion is a whole page expansion. The reason why I choose neighbor expansion over whole page expansion in this specific scenario is that:
-      Preserves logical document flow — adjacent chunks tend to be more semantically related.
-
-      Balances speed and accuracy.
-
-      Expands context without exceeding token limits.
-
-5) Add additional Data Sources
-maybe some questions cannot answered solely by the company's webiste
+## 💡 My Approach
+### Core Strategy
+I focused on building a system that accurately and comprehensively scrapes the data, smartly splits into chunks, and balances accuracy with response speed. The pipeline follows these steps:
+1.**Scraping Data**- Use Selenium WebDriver to handle JavaScript-rendered content on eluv.io official websites. Use an algorithm to extrtact and store all links from the current page, and visit sequentially without repeatation for information integrity. The maximum page to scrape is set to 60 pages.
+- scraped 56 pages, 4691 characters in total
+2.**Chunking** - Split documents into 500-word chunks with smart merging for short fragments (to previous chunk)
+3. **Embedding** - Generate vector embeddings using all-MiniLM-L6-v2 from sentence-transformers
+4. **Retrieval** - Find top-5 relevant chunks using cosine similarity (threshold: 0.3)  
+5. **Reranking** - Apply CrossEncoder (ms-marco-MiniLM-L-6-v2) to re-score and reorder results for enhanced context relevance
+6. **Context Expansion** - Include neighboring chunks (before and after the current chunk) from the **same webpage** to the context to preserve the flow
+7. **Generatio**n - Generate answers using Ollama's llama3.2:3b with temperature 0.2
 
 
-# Testing
-1) Multi-Perspective Question Types: 
 
-Basic: main business
+### Key Optimization
 
-Technical: Content Fabric / blockchain / security features
+#### ✅Dynamic Content Handling with Selenium
+Eluv.io is a single-page application with lots of JavaScript-rendered content. Regular HTTP requests wouldn't capture the full content, so I used Selenium WebDriver with:
+- Automatic page scrolling to trigger content
+- Wait conditions for JavaScript execution to complete
+- Headless Chrome for efficient scraping without GUI overhead
 
-Factual: founding time, location, industry partners
+This approach captured 56 pages with rich, dynamically-loaded content that static scrapers might be missing.
 
-Application: use cases
+#### ✅Smart Chunking 
+Instead of fixed-size chunks, I implemented adaptive chunking:
 
-Out-of-scope questions
-
-Grammar unclear questions
-
-2) Edge-Case Coverage: 
-
-Empty prompt
-
-Missing prompt field
-
-Very long prompt (essay-like)
-
-Very short prompt
-
-Special characters
-
-Misspellings of entity names
-
-## Tests result on Edge case 
-including Empty prompt, missing prompt field, very long prompt, very short prompt,special character, miss spelling name questions, essay 
-like prompt
-
-Very long prompt
-Server response:
-{
-"response": "Sorry, I don't have enough information to answer that question."
-}
-✓ Handled edge case successfully
-
-Very short prompt
-✗ Error: HTTPConnectionPool(host='localhost', port=5000): Read timed out. (read timeout=30)
-
-Typo / misspelling
-Server response:
-{
-"response": "Sorry, I don't have enough information to answer that question."
-}
-✓ Handled edge case successfully
-
-Special characters
-Server response:
-{
-"response": "I'm not sure about the answer to that question right now. You can visit the company\u2019s website to learn more: 
-https://eluv.io/
-"
-}
-✓ Handled edge case successfully
-
-Essay-like prompt
-✗ Error: HTTPConnectionPool(host='localhost', port=5000): Read timed out. (read timeout=30)
+- Base chunk size: 500 words
+- Automatic merging: chunks shorter than 50 words get appended to the previous chunk
+- Metadata preservation:  Each chunk stores chunk_id, url, and title, enabling fast neighbor lookup via a pre-built url_to_chunks mapping sorted by chunk_id, which helps with later functionality of preserving context relevance. This prevents fragmented information and maintains semantic coherence.
 
 
-## Test out question in different format
+#### ✅Cross-Encoder Reranking
+After initial retrieval, I added a reranking step using a CrossEncoder model (ms-marco-MiniLM-L-6-v2). This improved answer quality by:
+
+- Evaluating query-chunk relevance more accurately than cosine similarity alone
+- Distinguishing between superficially similar chunks and truly relevant ones
+- Re-scoring and reordering the top-5 results before context expansion
+
+The reranking step added ~2-3 seconds but dramatically improved answer precision.
+
+#### ✅Neighbor-Based Context Expansion
+Instead of retrieving isolated chunks, I include 1 neighboring chunk before and after each retrieved chunk (within the same webpage). This preserves the logical flow of information without hitting token limits.
+Before choosing the neighbor-based startegy, I'm also considering a full-page expansion strategy. The reason why I choose neighbor expansion over full-page expansion is mainly:
+
+- Adjacent chunks within the same web page are semantically related and maintain document narrative flow 
+- Keeps token usage reasonable (typically 9-10 chunks in total after expansion)
+- Maintains document structure without overwhelming the LLM context window
+
+I built a URL-to-chunks mapping that allows fast neighbor lookup by chunk_id, ensuring we only expand within the same source page.
 
 
-## Test question Answer Result:
-What is Eluvio's main business?
+#### ✅Adaptive Prompt Engineering 
+I crafted a detailed system prompt that:
 
-{
-"question": "What is Eluvio's main business?",
-"answer": "Eluvio's main business is providing a next-generation platform for storing, delivering, and monetizing digital content. 
+- Explicitly instructs the model to admit uncertainty when information is lacking
+- Adapts response style based on question type (how/why → detailed and descriptive; what/who → simple and concise answer)
+- Sets temperature to 0.2 for more factual, deterministic responses, limits generation to 250 tokens to maintain a balance in preserving answer comprehensiveness and not rambling
+- Tone: Maintain a confident, professional, and objective tone throughout
+- Ask the model to highlight key takeaways, technical advantages, or the broader meaning of the information when appropriate
+
+The prompt also includes a fallback message directing users to eluv.io when information isn't available.
+
+
+
+### What I Tried (and Learned)
+
+Static scraping first - Initially I tried requests + BeautifulSoup, but captured almost no content from the SPA (only one chunk "eluv.io" and nothing else). Switching to Selenium was essential and makes the whole data scraping process comprehensive and success.
+Similarity threshold tuning - Started with 0.1, but getting too many irrelevant chunks. Settled on 0.3 as a good balance between recall and precision. 
+Chunk size experiments - Tested 300, 500, and 700-word chunks. 500 words hit the balance between generation speed and meaningful precise retrieval. 
+Timeout issues - Sometimes very long or very short prompts caused timeouts during LLM generation. I switched the timeout control from the initial 30 s to 50s, or some of the prompts are getting the response. The issue seems related to Ollama's processing time. Still investigating optimal timeout configurations.
+Factual gaps - Some questions like "When was Eluvio founded?" return partial answers about founder but was not able to give the correct answer for the year because exact dates aren't prominently featured on the website. Could expand to other potential resources like LinkedIn, Crunchbase, or press releases for more comprehensive factual coverage.
+
+
+###🧪 Testing Results
+#### Sample Questions & Responses
+Q: What is Eluvio's main business? (test basic question)
+`Eluvio's main business is providing a next-generation platform for storing, delivering, and monetizing digital content. 
 Specifically, it offers a Content Fabric Protocol that transforms the distribution and monetization of premium video and digital media by 
-solving the generational problems of video over the Internet.",
-"time": 22.119462728500366
-}
+solving the generational problems of video over the Internet.`
+Response time: ~22s
 
-What is the Eluvio Content Fabric?
-{
-"question": "What is the Eluvio Content Fabric?",
-"answer": "The Eluvio Content Fabric is a blockchain-controlled, decentralized system designed to manage and distribute content through a 
-unified architecture, utilizing a built-in commerce and access control framework. It provides functions conventionally provided by separate 
-services and software stacks, including content storage and retrieval, data storage and query APIs, and more.",
-"time": 18.269644021987915
-}
-
-
-How does Eluvio use blockchain?
-{
-"question": "How does Eluvio use blockchain?",
-"answer": "Eluvio utilizes blockchain technology in its Content Fabric platform to provide a decentralized, global network for Internet 
+Q: How does Eluvio use blockchain? (test technical question)
+`Eluvio utilizes blockchain technology in its Content Fabric platform to provide a decentralized, global network for Internet 
 video distribution, monetization, and content management. The blockchain design enables low latency, high-quality (4K) content 
 distribution, as well as just-in-time streaming, without the need for file copies.\n\nUnder the control of blockchain smart contracts, 
 video content is dynamically served from the source, ensuring authenticity and integrity. This approach also facilitates on-chain 
 monetization, cross-chain authorization, and on-chain payments, providing a secure and transparent way to manage digital media content at 
 scale.
-         Key benefits of Eluvio's use of blockchain include:
+Key benefits of Eluvio's use of blockchain include:
               Low latency and high-quality content distribution
               Just-in-time streaming without file copies
               On-chain monetization and authorization
               Secure and transparent content management
 Overall, Eluvio's integration of blockchain technology enables the creation of a decentralized, global platform for Internet video 
-distribution, providing transformational benefits for sports teams, leagues, brands, and content owners.",
-"time": 28.892870903015137
-}
+distribution, providing transformational benefits for sports teams, leagues, brands, and content owners.`
+Response time: ~28s
 
-
-What security features does Eluvio provide?
-{
-"question": "What security features does Eluvio provide?",
-"answer": "Based on the provided context, Eluvio provides several security features, including:
+Q: What security features does Eluvio provide?
+`Based on the provided context, Eluvio provides several security features, including:
       1. Blockchain-based smart contracts that control the distribution and monetization of video content, ensuring secure and transparent 
       management.
       2. Decentralized architecture, which distributes content across a global network of nodes, reducing reliance on centralized systems 
@@ -165,69 +140,67 @@ What security features does Eluvio provide?
       The decentralized architecture of the Content Fabric reduces reliance on centralized systems and minimizes potential single-point 
       failures.
       These security features are a key advantage of the Eluvio platform, providing a secure and reliable way to distribute and monetize 
-      digital media content.",
-"time": 26.339545249938965
-}
+      digital media content.`
+Response time: ~26s
 
-When was Eluvio founded?
-{
-"question": "When was Eluvio founded?",
-"answer": "Eluvio was founded by Michelle Munson and Serban Simu, who are also the founders and inventors of Aspera (an Emmy Award-winning 
-company acquired by IBM in 2014). The exact date of Eluvio's founding is not explicitly mentioned in the provided context. However, it can 
-be inferred that Eluvio has received several notable awards and recognitions since its inception, including the NAB Product of the Year in 
-2024 and the prestigious Engineering Excellence Award by the Hollywood Professional Association.",
-"time": 33.26696968078613
-}
-------> potential future improvement for this question
+Q: Where is ELuvio at? (Test random factual question)
+`Eluvio is based in Berkeley, California.`
+Response time: ~17s
 
-
-What are Eluvio's use cases?
-{
-"question": "What are Eluvio's use cases?",
-"answer": "Eluvio's use cases include:
-      Transforming the distribution and monetization of premium video and digital media through its next-generation content distribution 
-      and storage protocol, known as the Content Fabric.
-      
-      Solving the fundamental challenges of video delivery over the Internet, including distribution, monetization, provenance, and 
-      authenticity.  
-      
-      Enabling sports teams, leagues, brands, and content owners to provide transformational streaming, monetization, and authenticity of 
-      any digital media content at scale.
-      
-      Supporting instant royalty settlements and payments to multiple parties directly on the blockchain for content owners.
-      
-      Powering new streaming platforms for fans, such as Bedrock's platform, which is launching for the 2025/26 season, and URC\u2019s 
-      partner, European Professional Club Rugby (EPCR), which will stream over 280 live games in over 90 countries.
-      These use cases highlight Eluvio's focus on providing innovative solutions for the video content industry, including streaming,
-      monetization, and distribution.",
-"time": 35.91717600822449
-}
-
-Who invented the internet?
-{
-"question": "Who invented the internet?",
-"answer": "Sorry, I don't have enough information to answer that question.",
-"time": 1.57840895652771
-}
-
-Where is Eluvio located?
-{
-"question": "Where is ELuvio at",
-"answer": "Eluvio is based in Berkeley, California.",
-"time": 17.51778817176819
-}
-
-Which industries or partners use Eluvio?
-{
-"question": "Which industries or partners use Eluvio?",
-"answer": "Eluvio partners with various industries and companies across multiple sectors, including:
-      Sports teams, leagues, brands, and content owners
+Q: Which industries or partners use Eluvio?
+`Eluvio partners with various industries and companies across multiple sectors, including:
+      Sports teams, leagues, brands, and content owners  
       Entertainment companies such as Amazon Studios/MGM, FOX, SONY Pictures, Telstra Broadcast Services/UEFA, United Rugby Championship, 
       Warner Bros., WPALiveTV, WWE, and others.
       Music industry artists like Black Eyed Peas and Dolly Parton.
       Broadcasting and media organizations.
       These partners leverage Eluvio's Content Fabric to transform their streaming, monetization, and AI discovery of digital media content 
-      at scale.",
-"time": 27.889963150024414
-}
+      at scale.`
+Response time: ~26s
+
+
+#### Edge Test Cases
+I systematically tested edge cases to identify failure modes:
+- Empty prompt
+` {"error": "Prompt cannot be empty"}
+ ✅Validation catches it`
+- Missing prompt field
+  `{"error": "Missing prompt field"}
+✅Proper error handling`
+- Very long prompt
+  `{"response": "Sorry, I don't have enough..."}
+  ⚠️Sometimes returns safe fallback, sometimes times out`
+- Very short prompt (1-2 words)
+ ` Timeout after 30s❌Needs investigation`
+- Special characters
+  `{"response": "Sorry, I don't have enough information..."} ✅not run into problems but responded as not enough information`
+- Misspellings
+   `{"response": "Sorry, I don't have enough information..."} ✅not run into problems but responded as not enough information`
+- Essay-like prompt (paragraph)
+  `Timeout after 30s❌Needs investigation`
+
+
+### 🔮 Future Improvements
+**Expand data sources** - Scrape Eluvio's technical docs, blog posts, press releases, or GitHub repos for more comprehensive coverage of technical details and company facts
+**Optimize timeout handling** - Implement dynamic timeout adjustment based on prompt length and add request queuing for better handling of edge cases
+**Edge test case handling** - Add a more comprehensive edge case handling strategy to deal with cases like **special character/miss spelling/ essay like prompt/ grammar mistake prompt etc. **
+Query classification - Automatically detect question type (factual/technical/comparison) and route to specialized retrieval strategies or prompts
+**Evaluation framework** - Currently the test file is only evaluating the quality of reponses by matching the keywords with the response string. Maybe in the future build better and more comprehensive test suite with ground-truth Q&A pairs to measure retrieval quality and answer accuracy quantitatively
+
+
+### 📁 Project Structure
+`.
+├── index.py                 # Selenium scraper + embedding generation
+├── server.py                # Flask API with RAG pipeline
+├── requirements.txt         # Python dependencies
+├── data/
+│   └── scraped/
+│       └── documents.json   # Raw scraped content
+├── index/
+│   ├── chunks.json          # Processed text chunks with metadata
+│   ├── embeddings.npy       # Vector embeddings (numpy array)
+│   └── config.json          # Model configuration
+└── README.md                # This file`
+
+
 
